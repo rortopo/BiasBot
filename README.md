@@ -34,7 +34,7 @@ language habits. By using education as opposed to a firm hand, we hope to stop t
 6. If the same word has been used a certain number of times, an educational blurb is sent to the user to explain why their language can be harmful, with further reading.
     - If anyone would like to update the JSONs, please feel free to add more!
   
-      (there is a demo video in the files)
+***There is a demo video in the files***
 
 ## Community Inclusion
 
