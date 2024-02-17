@@ -6,16 +6,16 @@ from json import loads
 import discord
 from discord.ext import commands
 from transformers import pipeline
-import FmongoConnect as mongoConnect
-import FbotWork as botWork
+import mongoConnect
+import botWork
 
 intents = discord.Intents.all()  # cannot be all when we're done
 dsClient = discord.Client(intents=intents)  # discord bot privileges
 ivancert = 'Certification PathFile'
 rorycert = "certification PathFile"
 
-mongo = mongoConnect.Backend("Cluster uri", ivancert)
-bot = botWork.botCommands("username","password")
+mongo = mongoConnect.Backend("Cluster uri", ivancert)  # mongo methods class instantiation
+ot = botWork.botCommands("username","password")  # bot class instantiation
 pipe = pipeline("text-classification", model="unitary/toxic-bert", tokenizer="bert-base-uncased", top_k=None)
 
 with open("eduPrompt.json", "r") as file:  # flag word list
@@ -26,7 +26,7 @@ async def on_ready():
     print(f'We have logged in as {dsClient.user}')
 
 
-def getBiggestHateScore(classification: list) -> str: 
+def getBiggestHateScore(classification: list) -> str: # TODO put in another file
     toxic = classification[0][0]['score']
     obscene = classification[0][1]['score']
     insult = classification[0][2]['score']
@@ -49,7 +49,7 @@ def getBiggestHateScore(classification: list) -> str:
     else:
         return 'Implicit/Other'
 
-def getCategory(classification: list) -> str: 
+def getCategory(classification: list) -> str: # TODO put this in another file
     toxic = classification[0][0]['score']
     obscene = classification[0][1]['score']
     insult = classification[0][2]['score']
@@ -109,7 +109,8 @@ async def on_message(message):
         messageClassification = pipe(message.content)  # uses BERT to classify messages
         hateCat = getBiggestHateScore(messageClassification)
         #hateScore = bot.hateScore(message.content)  # calls huggingChat to generate severity score
-
+        # ^^ This sadly broken and fix is unknown. Classification score used as hate index for now. need to switch back
+        # the implicitness is currently lost
         newScore = bot.newHateScore(messageClassification)
 
         
@@ -124,7 +125,7 @@ async def on_message(message):
 
             mongo.log(user_data) # logging data into mongo
             print('success!')
-            await message.author.send(bot.educationPrompt(message.content, hateCat, newScore))
+            await message.author.send(bot.flagReaction(message.content, hateCat, newScore))
             for flag in flagList:
                 if mongo.wordCount(flag, message.author.id) > 4:
                     match flag:
