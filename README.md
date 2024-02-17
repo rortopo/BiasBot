@@ -32,7 +32,9 @@ language habits. By using education as opposed to a firm hand, we hope to stop t
     - We had a hate score ranking that was much better at implicit bias. It worked by making a call to the standard Hugging Face LLM using hugchat, but this fell apart due to unknown reasons. The current number one priority is getting this functionality back, as it gave us a much better implicit reading. See ```botWork.botCommands.hateScore()```.
 5. If the hate score is above a set threshold, the event is logged into MongoDB and the user is sent a warning
 6. If the same word has been used a certain number of times, an educational blurb is sent to the user to explain why their language can be harmful, with further reading.
-    - If anyone would like to update the JSONs, please feel free to add more! 
+    - If anyone would like to update the JSONs, please feel free to add more!
+  
+      (there is a demo video in the files)
 
 ## Community Inclusion
 
